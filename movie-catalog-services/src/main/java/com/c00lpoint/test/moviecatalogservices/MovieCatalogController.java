@@ -3,6 +3,7 @@ package com.c00lpoint.test.moviecatalogservices;
 import com.c00lpoint.test.moviecatalogservices.modules.MovieCatalogInfo;
 import com.c00lpoint.test.moviecatalogservices.modules.MovieInfo;
 import com.c00lpoint.test.moviecatalogservices.modules.RatingInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,11 +17,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/catalog")
 public class MovieCatalogController {
+    @Autowired
+    private RestTemplate template;
 
     @RequestMapping("/{userId}")
     public List<MovieCatalogInfo> getMovieCatalog(@PathVariable("userId") String userId){
-
-        RestTemplate template = new RestTemplate();
 
         List<RatingInfo> ratingInfos = Arrays.asList(
                 new RatingInfo(1, 4.5),
