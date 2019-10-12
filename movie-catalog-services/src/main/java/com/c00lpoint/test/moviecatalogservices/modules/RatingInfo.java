@@ -4,6 +4,9 @@ public class RatingInfo {
     private long movieId;
     private double rating;
 
+    public RatingInfo() {
+    }
+
     public RatingInfo(long movieId, double rating) {
         this.movieId = movieId;
         this.rating = rating;
