@@ -1,6 +1,7 @@
 package com.c00lpoint.test.ratingdataservices;
 
 import com.c00lpoint.test.ratingdataservices.modules.RatingInfo;
+import com.c00lpoint.test.ratingdataservices.modules.UserRatings;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +25,9 @@ public class RatingDataController {
         return new RatingInfo(movieId, 4.5);
     }
 
+    // Since backward compatibility reason do not use list as the root object of the result .
     @RequestMapping("/user/{userId}")
-    public List<RatingInfo> getUserRatings(@PathVariable("userId") String userId){
-        return ratingInfos;
+    public UserRatings getUserRatings(@PathVariable("userId") String userId){
+        return new UserRatings(userId, ratingInfos);
     }
 }

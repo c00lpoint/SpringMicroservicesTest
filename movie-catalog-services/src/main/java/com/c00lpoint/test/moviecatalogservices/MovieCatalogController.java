@@ -3,6 +3,7 @@ package com.c00lpoint.test.moviecatalogservices;
 import com.c00lpoint.test.moviecatalogservices.modules.MovieCatalogInfo;
 import com.c00lpoint.test.moviecatalogservices.modules.MovieInfo;
 import com.c00lpoint.test.moviecatalogservices.modules.RatingInfo;
+import com.c00lpoint.test.moviecatalogservices.modules.UserRatings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -30,15 +31,16 @@ public class MovieCatalogController {
     public List<MovieCatalogInfo> getMovieCatalog(@PathVariable("userId") String userId){
 
         //get object of list from RestfulService
-        List<RatingInfo> ratingInfos = template.exchange(
-                "http://localhost:8083/rating/user/" + userId,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<RatingInfo>>() {}).getBody();
+//        List<RatingInfo> ratingInfos = template.exchange(
+//                "http://localhost:8083/rating/user/" + userId,
+//                HttpMethod.GET,
+//                null,
+//                new ParameterizedTypeReference<List<RatingInfo>>() {}).getBody();
+        UserRatings userRatings = template.getForObject("http://localhost:8083/rating/user/" + userId, UserRatings.class);
 
         WebClient.Builder builder = WebClient.builder();
 
-        return ratingInfos.stream().map(r -> {
+        return userRatings.getRatings().stream().map(r -> {
             MovieInfo movieInfo = template.getForObject("http://localhost:8082/movie/" + r.getMovieId(), MovieInfo.class);
 
 //            MovieInfo movieInfo = webClientBuilder.build()
