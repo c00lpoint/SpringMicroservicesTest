@@ -14,10 +14,10 @@ import java.util.List;
 public class RatingDataController {
 
     List<RatingInfo> ratingInfos = Arrays.asList(
-            new RatingInfo(1, 4.5),
-            new RatingInfo(2, 4),
-            new RatingInfo(3, 4),
-            new RatingInfo(4, 4.7)
+            new RatingInfo(24428, 3.8),
+            new RatingInfo(99861, 3.7),
+            new RatingInfo(299536, 4.2),
+            new RatingInfo(299534, 4.2)
     );
 
     @RequestMapping("/{movieId}")
