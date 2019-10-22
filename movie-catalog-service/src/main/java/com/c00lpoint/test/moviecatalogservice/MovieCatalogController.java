@@ -1,6 +1,7 @@
 package com.c00lpoint.test.moviecatalogservice;
 
 import com.c00lpoint.test.moviecatalogservice.modules.MovieCatalogInfo;
+import com.c00lpoint.test.moviecatalogservice.modules.MovieCatalogList;
 import com.c00lpoint.test.moviecatalogservice.modules.MovieInfo;
 import com.c00lpoint.test.moviecatalogservice.modules.UserRatings;
 import com.netflix.discovery.DiscoveryClient;
@@ -26,7 +27,7 @@ public class MovieCatalogController {
 //    private DiscoveryClient discoveryClient;
 
     @RequestMapping("/{userId}")
-    public List<MovieCatalogInfo> getMovieCatalog(@PathVariable("userId") String userId){
+    public MovieCatalogList getMovieCatalog(@PathVariable("userId") String userId){
         //get object of list from RestfulService
 //        List<RatingInfo> ratingInfos = template.exchange(
 //                "http://localhost:8083/rating/user/" + userId,
@@ -37,7 +38,7 @@ public class MovieCatalogController {
 
         WebClient.Builder builder = WebClient.builder();
 
-        return userRatings.getRatings().stream().map(r -> {
+        List<MovieCatalogInfo> catalogList = userRatings.getRatings().stream().map(r -> {
             MovieInfo movieInfo = template.getForObject("http://MOVIE-DATA-SERVICE/movie/" + r.getMovieId(), MovieInfo.class);
 
 //            MovieInfo movieInfo = webClientBuilder.build()
@@ -49,6 +50,6 @@ public class MovieCatalogController {
 
             return new MovieCatalogInfo(movieInfo.getName(), movieInfo.getDesc(), r.getRating());
         }).collect(Collectors.toList());
-
+        return new MovieCatalogList(catalogList);
     }
 }
