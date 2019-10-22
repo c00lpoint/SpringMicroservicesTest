@@ -1,9 +1,18 @@
 package com.c00lpoint.test.moviedataservice.modules;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MovieInfo {
+    @JsonAlias({"id"})
     private long movieId;
+    @JsonAlias({"original_title"})
     private String name;
+    @JsonAlias({"overview"})
     private String desc;
+
+    public MovieInfo() {
+    }
 
     public MovieInfo(long movieId, String name, String desc) {
         this.movieId = movieId;
