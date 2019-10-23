@@ -1,6 +1,8 @@
 package com.c00lpoint.test.moviedataservice;
 
 import com.c00lpoint.test.moviedataservice.modules.MovieInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +17,7 @@ import java.util.HashMap;
 @RequestMapping("/movie")
 public class MovieDataController {
 
+    private Logger logger = LoggerFactory.getLogger(MovieDataController.class);
     @Autowired
     private RestTemplate template;
 
@@ -32,7 +35,7 @@ public class MovieDataController {
     @RequestMapping("/{movieId}")
     public MovieInfo getMovieInfo(@PathVariable("movieId") long movieId){
         String tmdbMovieInfoUrl = String.format(tmdbFindMovieUrlFormat, movieId);
-        System.out.println(tmdbMovieInfoUrl);
+        logger.debug(tmdbMovieInfoUrl);
         MovieInfo movieInfo = template.getForObject(tmdbMovieInfoUrl, MovieInfo.class);
         return movieInfo;
         //return new MovieInfo(movieId, "Avenger " + movieId, destMap.get(movieId));
