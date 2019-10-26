@@ -3,3 +3,13 @@ server:
 spring:
   application:
     name: movie-data-service
+logging:
+  level:
+    com:
+      c00lpoint:
+        test:
+          moviecatalogservice: DEBUG
+#  path: ./logs
+  pattern:
+    file: '%date{yyyy-MM-dd HH:mm:ss.SSSS} %-5level [%thread] %logger{15} - %msg%n'
+    console: '%highlight{%date{yyyy-MM-dd HH:mm:ss.SSSS} %-5level [%thread] %logger{15} - %msg%n}'
