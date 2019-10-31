@@ -8,8 +8,9 @@ logging:
     com:
       c00lpoint:
         test:
-          moviecatalogservice: DEBUG
+          moviedataservice: DEBUG
 #  path: ./logs
+  file: ./logs/movie-data-service.log
   pattern:
     file: '%date{yyyy-MM-dd HH:mm:ss.SSSS} %-5level [%thread] %logger{15} - %msg%n'
     console: '%highlight{%date{yyyy-MM-dd HH:mm:ss.SSSS} %-5level [%thread] %logger{15} - %msg%n}'
