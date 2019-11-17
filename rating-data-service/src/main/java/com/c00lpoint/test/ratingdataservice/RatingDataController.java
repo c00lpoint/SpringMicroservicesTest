@@ -22,7 +22,7 @@ public class RatingDataController {
 
     @RequestMapping("/{movieId}")
     public RatingInfo getRating(@PathVariable("movieId") long movieId){
-        return new RatingInfo(movieId, 4.5);
+        return new RatingInfo(movieId, 3.8);
     }
 
     // Since backward compatibility reason do not use list as the root object of the result .
