@@ -5,6 +5,8 @@ import com.c00lpoint.test.moviecatalogservice.modules.MovieCatalogList;
 import com.c00lpoint.test.moviecatalogservice.modules.MovieInfo;
 import com.c00lpoint.test.moviecatalogservice.modules.UserRatings;
 import com.netflix.discovery.DiscoveryClient;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.ribbon.proxy.annotation.Hystrix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +31,7 @@ public class MovieCatalogController {
 //    private DiscoveryClient discoveryClient;
 
     @RequestMapping("/{userId}")
+    @HystrixCommand(fallbackMethod = "getFallbackCatalogList")
     public MovieCatalogList getMovieCatalog(@PathVariable("userId") String userId){
         //get object of list from RestfulService
 //        List<RatingInfo> ratingInfos = template.exchange(
@@ -51,5 +56,11 @@ public class MovieCatalogController {
             return new MovieCatalogInfo(movieInfo.getName(), movieInfo.getDesc(), r.getRating());
         }).collect(Collectors.toList());
         return new MovieCatalogList(catalogList);
+    }
+
+    public  MovieCatalogList getFallbackCatalogList(String userId){
+        return new MovieCatalogList(Arrays.asList(
+           new MovieCatalogInfo("/", "/", 0)
+        ));
     }
 }
