@@ -1,9 +1,8 @@
 package com.c00lpoint.test.moviecatalogservice;
 
-import com.c00lpoint.test.moviecatalogservice.modules.MovieCatalogInfo;
-import com.c00lpoint.test.moviecatalogservice.modules.MovieCatalogList;
-import com.c00lpoint.test.moviecatalogservice.modules.MovieInfo;
-import com.c00lpoint.test.moviecatalogservice.modules.UserRatings;
+import com.c00lpoint.test.moviecatalogservice.modules.*;
+import com.c00lpoint.test.moviecatalogservice.services.MovieDataService;
+import com.c00lpoint.test.moviecatalogservice.services.RatingDataService;
 import com.netflix.discovery.DiscoveryClient;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.ribbon.proxy.annotation.Hystrix;
@@ -23,15 +22,17 @@ import java.util.stream.Collectors;
 @RequestMapping("/catalog")
 public class MovieCatalogController {
     @Autowired
-    private RestTemplate template;
-    @Autowired
     private WebClient.Builder webClientBuilder;
+    @Autowired
+    private RatingDataService ratingDataService;
+    @Autowired
+    private MovieDataService movieDataService;
+
 
 //    @Autowired
 //    private DiscoveryClient discoveryClient;
 
     @RequestMapping("/{userId}")
-    @HystrixCommand(fallbackMethod = "getFallbackCatalogList")
     public MovieCatalogList getMovieCatalog(@PathVariable("userId") String userId){
         //get object of list from RestfulService
 //        List<RatingInfo> ratingInfos = template.exchange(
@@ -39,12 +40,12 @@ public class MovieCatalogController {
 //                HttpMethod.GET,
 //                null,
 //                new ParameterizedTypeReference<List<RatingInfo>>() {}).getBody();
-        UserRatings userRatings = template.getForObject("http://RATING-DATA-SERVICE/rating/user/" + userId, UserRatings.class);
+        UserRatings userRatings = ratingDataService.getUserRatings(userId);
 
         WebClient.Builder builder = WebClient.builder();
 
         List<MovieCatalogInfo> catalogList = userRatings.getRatings().stream().map(r -> {
-            MovieInfo movieInfo = template.getForObject("http://MOVIE-DATA-SERVICE/movie/" + r.getMovieId(), MovieInfo.class);
+            MovieInfo movieInfo = movieDataService.getMovieInfo(r.getMovieId());
 
 //            MovieInfo movieInfo = webClientBuilder.build()
 //                    .get()
@@ -58,9 +59,4 @@ public class MovieCatalogController {
         return new MovieCatalogList(catalogList);
     }
 
-    public  MovieCatalogList getFallbackCatalogList(String userId){
-        return new MovieCatalogList(Arrays.asList(
-           new MovieCatalogInfo("/", "/", 0)
-        ));
-    }
 }
